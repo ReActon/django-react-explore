@@ -1,0 +1,76 @@
+
+.header {
+    background-color:#33475b;
+    height: 6rem;
+    margin: 0;
+    min-height: 100%;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.header_title {
+    color: aliceblue;
+    
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+.main_span {
+    display: flex;
+    justify-content: center;
+    padding-top: 3rem;
+}
+
+.name_lbl {
+    font-size: 1.2rem;
+    padding-right: 1rem;
+}
+
+.in_field {
+    padding-right: 2rem;
+}
+
+.btn_nat {
+    padding-left: 1rem;
+    font-size: 1rem;
+    justify-content: center;
+    align-self: center;
+}
+
+.lbl_div {
+    background-color:white;
+    height: 4rem;
+    margin: 0;
+    min-height: 100%;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.lbl_statement {
+    display: flex;
+    justify-content: center;
+    padding-top: 0rem;
+    font-size: 2rem;
+    color:#33475b;
+    
+    align-self: center;
+}
+
+.pie_chart_div {
+    /* display: flex; */
+    /* justify-content: center; */
+    /* padding-bottom: 10px; */
+}
+
+.pie_chart {
+    width: 15rem;
+    /* display: flex;
+    justify-content: center; */
+    margin: 0 auto;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
