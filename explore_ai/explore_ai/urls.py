@@ -22,6 +22,6 @@ from backend.views import index
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', front, name='front'),
+    # path to the api backend
     path('api/<str:name>', index, name="index"),
-    # path('data/', getNationaliseData, name="getData"),
 ]

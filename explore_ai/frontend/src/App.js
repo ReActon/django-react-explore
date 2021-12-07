@@ -1,11 +1,7 @@
 import './App.css';
-import ChartComp from './Components/ChartComp';
-import Dankmemes from './Components/DankMemes';
-import InputComp from './Components/InputComp';
-import ImportFieldComp from './Components/InputFieldComp';
 import React, {useState} from 'react';
 import axios from 'axios';
-import {Bar, Pie} from 'react-chartjs-2'
+import {Pie} from 'react-chartjs-2'
 import Chart from 'chart.js/auto';
 
 const App = () => {
@@ -19,95 +15,92 @@ const App = () => {
   const [st_country_codes, set_st_country_codes] = useState([]);
   const [st_country_probs, set_st_country_probs] = useState([]);
 
-
-  // fetch api data
-  
-  // function Greeting(props) {
-  //   let local_tog = props.toggle_graph;
-  //   if (!local_tog) {    
-  //     return <GuestGreeting />;  
-  //   }
-  //   return <UserGreeting />;}
- 
-        // const country_data = response.data;
-        // const country_ids = country_data.country_ids;
-        // const country_probs = country_data.country_probs;
-       
+  // fetch the api       
   const fetch_api_data = (in_s) => {
 
-    let country_codes = []
-    let country_probdata = []
-    let temp_prob = 0.0
-    let temp_country = ""
+    // temporary vars
+    var country_codes = []
+    var country_probdata = []
+    var temp_prob = 0.0
+    var temp_country = ""
 
     axios
       .get(`http://127.0.0.1:8000/api/${in_s}`)
       .then(res => {
-        console.log(res);
-        console.log(res.data);
+        // set the api data state var
         set_api_data(res.data);        
+
+        // set the locals vars from the result of the api call
         country_codes = res.data.country_ids;
         country_probdata = res.data.country_probs;
 
+        // include the requirement for the country-code-lookup
         const lookup = require('country-code-lookup')
+
+        // set the likeliest country and its probability
         temp_country = lookup.byIso(country_codes[0]).country;
         temp_prob = country_probdata[0] * 100;
 
-        var rounded_temp = Math.round(temp_prob * 10) / 10;
+        // round off the probability
+        const rounded_temp = Math.round(temp_prob * 10) / 10;
 
+        // build the label to be displayed
         const results = "You are most likely from " + temp_country + " with a probability of " + rounded_temp + "%";
+
+        // set the various state vars
         set_label_statement(results);
         set_st_country_codes(country_codes);
         set_st_country_probs(country_probdata);
-        //create chart
 
       }, (error) => {{
-        // console.log(error);
-      
+        // if error code 500, db lookup failed
+        // build the new label
         const results = "Sorry, Your Name Could Not Be Found.";
+
+        // set the label
         set_label_statement(results);
       }});
 
   }
 
   const ChartComp = (props) => {
-    let arr_ids = props.ids;
-    let arr_probs = props.probs;
-
-    const data = {
-        labels: arr_ids,
-        datasets: [{
-          label: 'My First Dataset',
-          data: arr_probs,
-          backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
-          ],
-        }]
-      };
+    // let arr_ids = props.ids;
+    // let arr_probs = props.probs;
     
     return (
         <div>
-            <Bar 
-                data={data}
-                height={400}
-                width={400}
-                options={{
-                    maintainAspectRatio: false
-                }}
-            />
-            <p>Bar Chart</p>
+            <Pie 
+              data={{
+                labels:ConvertCountryCodes(st_country_codes),
+                datasets:[{
+                  label: 'Country Nationality',
+                  data:st_country_probs,
+                  backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                  ],
+                  hoverOffset:4,
+                }]
+
+              }}
+              width={"30%"}
+          
+        />
         </div>
     )
   }
 
   const ConvertCountryCodes = (arr_codes) => {
+
     const lookup = require('country-code-lookup')
     const arr_names = []
+
+    // convert each country code and push results to new array
     arr_codes.forEach(element => {
       arr_names.push(lookup.byIso(element).country)
     });
+
     return arr_names;
   }
 
@@ -128,6 +121,7 @@ const App = () => {
       <div className="pie_chart">
       <Pie 
           data={{
+            // convert each code to its corresponding country for labels
             labels:ConvertCountryCodes(st_country_codes),
             datasets:[{
               label: 'Country Nationality',
@@ -137,6 +131,7 @@ const App = () => {
                 'rgb(54, 162, 235)',
                 'rgb(255, 205, 86)'
               ],
+              // add animation element
               hoverOffset:4,
             }]
 

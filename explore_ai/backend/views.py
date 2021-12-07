@@ -2,8 +2,12 @@ from django.shortcuts import render
 import requests
 from django.http import JsonResponse
 
-# Create your views here.
 def index(request, name):
+    '''
+    Uses the requests library to get relevant information from the Nationalize API.
+    This information is used to build a JSON object to be passed back to the front end.
+    '''
+
     if name == '':
         return 
     url = 'https://api.nationalize.io/?name={}'
@@ -11,11 +15,6 @@ def index(request, name):
 
     r = requests.get(url.format(nameis)).json()
 
-    # print(r)
-    country_prob1 = {
-        'name': r['name'],
-        'country_list': r['country'],
-    }
     country_list =  r['country']
 
     country_info = {
@@ -30,13 +29,11 @@ def index(request, name):
         "probs": [0.17, x, y]
     }
     '''
+
     code_list = []
     prob_list = []
-    # for i in country_info:
-    #     returned_json = {
-    #         "country_ids": code_list.append(country_list[i][i]),
-    #         "country_probs": prob_list.append(country_list[i][i]),
-    #     }
+
+    # building the code and probability lists for the countries
     code_list.append(country_info['first_country']['country_id'])
     code_list.append(country_info['second_country']['country_id'])
     code_list.append(country_info['third_country']['country_id'])
@@ -45,14 +42,12 @@ def index(request, name):
     prob_list.append(country_info['second_country']['probability'])
     prob_list.append(country_info['third_country']['probability'])
 
-    
+    # building the object to be returned
     returned_json = {
         "name": r["name"],
         "country_ids": code_list, 
         "country_probs": prob_list,
     }
-    # perc = country_prob['first_country']['probability'] * 100
-    # print('You are likely from {} with a probability of {}'.format(country_prob['first_country']['country_id'], perc))
-    js = JsonResponse(returned_json)
-    print(type(js))
-    return js
+
+    # casting the object to json and returning it
+    return JsonResponse(returned_json)
